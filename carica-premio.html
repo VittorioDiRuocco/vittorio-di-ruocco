@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Carica Premio - Vittorio Di Ruocco</title>
+  <style>
+    body {
+      font-family: Georgia, serif;
+      background: #f3f1ef;
+      padding: 2rem;
+      color: #222;
+    }
+    .form-container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 2rem;
+      color: #333;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>Carica un nuovo premio</h1>
+    <form id="premioForm">
+      <label for="titolo">Titolo dell'evento</label>
+      <input type="text" id="titolo" required>
+
+      <label for="luogo">Luogo</label>
+      <input type="text" id="luogo" required>
+
+      <label for="data">Data</label>
+      <input type="date" id="data" required>
+
+      <label for="classifica">Classifica</label>
+      <select id="classifica" required>
+        <option value="">Seleziona...</option>
+        <option value="1">1° Premio</option>
+        <option value="2">2° Premio</option>
+        <option value="3">3° Premio</option>
+        <option value="Menzione">Menzione d'onore</option>
+      </select>
+
+      <label for="descrizione">Descrizione</label>
+      <textarea id="descrizione" rows="3"></textarea>
+
+      <label for="media">Foto o Video</label>
+      <input type="file" id="media" accept="image/*,video/*">
+
+      <button type="submit">Salva premio</button>
+    </form>
+    <a href="index.html">← Torna alla home</a>
+  </div>
+
+  <script>
+    document.getElementById('premioForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const password = prompt("Inserisci la password per salvare il premio:");
+      if (password !== "Poetamagico65") {
+        alert("Password errata!");
+        return;
+      }
+      alert("Premio salvato localmente (ma non ancora permanente).");
+      this.reset();
+    });
+  </script>
+</body>
+</html>
