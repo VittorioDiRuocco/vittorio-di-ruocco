@@ -1,1 +1,131 @@
-<!DOCTYPE html><html lang='it'><head><meta charset='UTF-8'><title>Curriculum - Vittorio Di Ruocco</title></head><body><h1>Curriculum</h1><p>Curriculum vitae disponibile a breve.</p><a href='index.html'>Torna alla home</a></body></html>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vittorio Di Ruocco</title>
+  <style>
+    /* Stili invariati... */
+    #mappa {
+      width: 100%;
+      height: 400px;
+      margin-top: 2rem;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <!-- resto invariato -->
+
+  <main>
+    <!-- sezioni precedenti -->
+
+    <section class="table-section">
+      <h2>Elenco Premi Inseriti</h2>
+      <table id="tabellaPremi">
+        <thead>
+          <tr>
+            <th>Evento</th>
+            <th>Luogo</th>
+            <th>Data</th>
+            <th>Classifica</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- I premi inseriti appariranno qui -->
+        </tbody>
+      </table>
+
+      <div id="mappa"></div>
+    </section>
+
+    <script>
+      const premi = [];
+      let map;
+      let geocoder;
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("mappa"), {
+          center: { lat: 41.8719, lng: 12.5674 },
+          zoom: 6,
+        });
+        geocoder = new google.maps.Geocoder();
+      }
+
+      function aggiornaTabella() {
+        const tbody = document.querySelector("#tabellaPremi tbody");
+        tbody.innerHTML = "";
+        premi.forEach((p, i) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${p.titolo}</td>
+            <td>${p.luogo}</td>
+            <td>${p.data}</td>
+            <td>${p.classifica}</td>
+            <td class="actions">
+              <button onclick="modificaPremio(${i})">Modifica</button>
+              <button onclick="cancellaPremio(${i})">Cancella</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function aggiungiSegnaposto(premio) {
+        geocoder.geocode({ address: premio.luogo }, (results, status) => {
+          if (status === "OK") {
+            new google.maps.Marker({
+              map,
+              position: results[0].geometry.location,
+              title: premio.titolo,
+              label: premio.classifica[0],
+            });
+            map.setCenter(results[0].geometry.location);
+          }
+        });
+      }
+
+      document.getElementById('premioForm')?.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const password = prompt("Inserisci la password per salvare il premio:");
+        if (password !== "Poetamagico65") {
+          alert("Password errata!");
+          return;
+        }
+        const premio = {
+          titolo: document.getElementById('titolo').value,
+          luogo: document.getElementById('luogo').value,
+          data: document.getElementById('data').value,
+          classifica: document.getElementById('classifica').value,
+          descrizione: document.getElementById('descrizione').value
+        };
+        premi.push(premio);
+        aggiornaTabella();
+        aggiungiSegnaposto(premio);
+        document.getElementById('premioForm').reset();
+      });
+
+      function modificaPremio(index) {
+        const p = premi[index];
+        document.getElementById('titolo').value = p.titolo;
+        document.getElementById('luogo').value = p.luogo;
+        document.getElementById('data').value = p.data;
+        document.getElementById('classifica').value = p.classifica;
+        document.getElementById('descrizione').value = p.descrizione;
+        premi.splice(index, 1);
+        aggiornaTabella();
+      }
+
+      function cancellaPremio(index) {
+        if (confirm("Sei sicuro di voler cancellare questo premio?")) {
+          premi.splice(index, 1);
+          aggiornaTabella();
+        }
+      }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+  </main>
+</body>
+</html>
